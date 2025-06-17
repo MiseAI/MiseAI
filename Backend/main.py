@@ -12,4 +12,3 @@ app.include_router(forecast.router, prefix="/forecast", tags=["Forecast"])
 @app.get("/")
 def read_root():
     return {"message": "Welcome to MiseAI API"}
-# trigger redeploy
