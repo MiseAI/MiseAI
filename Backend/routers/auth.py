@@ -1,37 +1,40 @@
-
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
 from database import SessionLocal
 from models.user import User
-from sqlalchemy.exc import IntegrityError
+from pydantic import BaseModel, EmailStr
 
 router = APIRouter()
 
-class UserCreate(BaseModel):
+class RegisterRequest(BaseModel):
     username: str
-    email: str
+    email: EmailStr
     password: str
 
-class UserLogin(BaseModel):
-    email: str
+class LoginRequest(BaseModel):
+    email: EmailStr
     password: str
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 @router.post("/register")
-def register(user: UserCreate):
-    db = SessionLocal()
-    new_user = User(username=user.username, email=user.email, password=user.password)
-    try:
-        db.add(new_user)
-        db.commit()
-        return {"message": f"User {user.email} registered successfully"}
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(status_code=400, detail="User already exists")
+def register(user: RegisterRequest, db: Session = Depends(get_db)):
+    existing = db.query(User).filter(User.email == user.email).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    new_user = User(email=user.email, username=user.username, password=user.password)
+    db.add(new_user)
+    db.commit()
+    return {"message": f"User {user.email} registered successfully"}
 
 @router.post("/login")
-def login(user: UserLogin):
-    db = SessionLocal()
-    db_user = db.query(User).filter_by(email=user.email, password=user.password).first()
-    if db_user:
-        return {"message": "Login successful"}
-    raise HTTPException(status_code=401, detail="Invalid credentials")
+def login(credentials: LoginRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == credentials.email).first()
+    if not user or user.password != credentials.password:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    return {"message": "Login successful"}
