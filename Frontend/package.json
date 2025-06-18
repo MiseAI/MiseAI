@@ -1,11 +1,14 @@
 {
   "name": "miseai-frontend",
   "version": "1.0.0",
-  "description": "Static frontend for MiseAI",
-  "scripts": {
-    "start": "serve ."
-  },
+  "private": true,
   "dependencies": {
-    "serve": "^14.2.0"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
   }
 }
