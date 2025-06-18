@@ -12,7 +12,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth.router, prefix="/auth", tags=["Auth"])
+app.include_router(debug.router, prefix="/debug", tags=["Debug"])
 
 @app.get("/")
 def read_root():
