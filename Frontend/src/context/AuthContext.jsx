@@ -1,36 +1,45 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { login as loginApi } from '../api/auth';
+import React, { createContext, useState, useContext, useEffect } from 'react'
+import axios from 'axios'
 
-const AuthContext = createContext(null);
+const AuthContext = createContext()
+export const useAuth = () => useContext(AuthContext)
 
-export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  const [user, setUser] = useState(null);
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
-  const login = async (email, password) => {
-    const data = await loginApi(email, password);
-    localStorage.setItem('token', data.access_token);
-    setToken(data.access_token);
-    setUser({ email }); // Placeholder: decode token for real user data
-  };
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
-    setUser(null);
-  };
+const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState(localStorage.getItem('token') || null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (token) {
-      setUser({}); // Optionally decode token to get user info
-    }
-  }, [token]);
+    setLoading(false)
+  }, [])
+
+  const login = async (email, password) => {
+    const res = await axios.post(`${BASE_URL}/auth/login`, { email, password })
+    setToken(res.data.access_token)
+    localStorage.setItem('token', res.data.access_token)
+  }
+
+  const register = async (username, email, password) => {
+    await axios.post(`${BASE_URL}/auth/register`, { username, email, password })
+  }
+
+  const logout = () => {
+    setToken(null)
+    localStorage.removeItem('token')
+  }
+
+  const axiosInstance = axios.create()
+  axiosInstance.interceptors.request.use(config => {
+    if (token) config.headers.Authorization = `Bearer ${token}`
+    return config
+  })
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout }}>
+    <AuthContext.Provider value={{ token, login, register, logout, axios: axiosInstance, loading }}>
       {children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
 
-export const useAuth = () => useContext(AuthContext);
+export default AuthProvider
