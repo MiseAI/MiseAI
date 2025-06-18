@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     watch: {
-      // don’t watch dependencies or your dist folder for changes
+      // Prevent endless restarts by ignoring generated files
       ignored: ['**/node_modules/**', '**/dist/**']
     }
   }
