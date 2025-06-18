@@ -1,36 +1,39 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { login as loginApi } from '../api/auth';
+import React, { createContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import * as authService from '../services/auth';
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  const [user, setUser] = useState(null);
+export function AuthProvider({ children }) {
+  const [token, setToken] = useState(() => localStorage.getItem('token'));
+  const navigate = useNavigate();
 
-  const login = async (email, password) => {
-    const data = await loginApi(email, password);
-    localStorage.setItem('token', data.access_token);
-    setToken(data.access_token);
-    setUser({ email }); // Placeholder: decode token for real user data
-  };
+  async function login({ email, password }) {
+    const res = await authService.login({ email, password });
+    const jwt = res.data.access_token;
+    localStorage.setItem('token', jwt);
+    setToken(jwt);
+    navigate('/dashboard');
+  }
 
-  const logout = () => {
+  async function register(creds) {
+    await authService.register(creds);
+    navigate('/login');
+  }
+
+  function logout() {
     localStorage.removeItem('token');
     setToken(null);
-    setUser(null);
-  };
-
-  useEffect(() => {
-    if (token) {
-      setUser({}); // Optionally decode token to get user info
-    }
-  }, [token]);
+    navigate('/login');
+  }
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout }}>
+    <AuthContext.Provider value={{ token, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-export const useAuth = () => useContext(AuthContext);
+export function useAuth() {
+  return React.useContext(AuthContext);
+}
