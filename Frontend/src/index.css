@@ -1,4 +1,16 @@
 body {
-  font-family: sans-serif;
-  margin: 2rem;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 1rem;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+}
+label {
+  margin-top: 0.5rem;
+}
+button {
+  margin-top: 1rem;
 }

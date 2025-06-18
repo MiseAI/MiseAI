@@ -1,40 +1,34 @@
 import React, { useState } from 'react';
-import { register } from '../api/auth';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function RegisterForm() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await register({ username, email, password });
-      setMessage('Registration successful');
-      console.log(res);
+      await axios.post('https://miseai-backend-production.up.railway.app/auth/register', { username, email, password });
+      alert('Registration successful. Please login.');
+      navigate('/login');
     } catch (err) {
-      setMessage(err.message || 'Registration failed');
+      alert(err.response?.data?.detail || 'Registration failed');
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <h2>Register</h2>
-      <div>
-        <label>Username:</label><br/>
-        <input type="text" value={username} onChange={e => setUsername(e.target.value)} required />
-      </div>
-      <div>
-        <label>Email:</label><br/>
-        <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
-      </div>
-      <div>
-        <label>Password:</label><br/>
-        <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
-      </div>
+      <label>Username:</label>
+      <input value={username} onChange={e => setUsername(e.target.value)} required />
+      <label>Email:</label>
+      <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+      <label>Password:</label>
+      <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
       <button type="submit">Register</button>
-      {message && <p>{message}</p>}
     </form>
   );
 }
