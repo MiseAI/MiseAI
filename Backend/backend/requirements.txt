@@ -1,6 +1,7 @@
 fastapi==0.95.2
 uvicorn==0.22.0
-sqlalchemy==1.4.49
 pydantic==1.10.12
+sqlalchemy==1.4.49
+python-multipart
 passlib[bcrypt]
 PyJWT
