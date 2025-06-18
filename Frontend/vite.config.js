@@ -4,9 +4,6 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
-    proxy: {
-      '/auth': { target: process.env.VITE_API_BASE_URL, changeOrigin: true },
-      '/users': { target: process.env.VITE_API_BASE_URL, changeOrigin: true },
-    }
+    port: 5173
   }
 });
