@@ -1,25 +1,13 @@
-import os
-from datetime import datetime, timedelta
-
-import jwt  # PyJWT
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
 
-from database import SessionLocal, engine, Base
+# import your local database dependency and models
+from database import get_db
 from models.user import User
 
-# Create tables at startup
-Base.metadata.create_all(bind=engine)
-
-router = APIRouter(prefix="/auth", tags=["Auth"])
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-SECRET_KEY = os.getenv("SECRET_KEY", "CHANGE_ME")  
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+# import your security utils
+from security import hash_password, verify_password, create_access_token
 
 class RegisterRequest(BaseModel):
     username: str
@@ -32,31 +20,14 @@ class LoginRequest(BaseModel):
 
 class TokenResponse(BaseModel):
     access_token: str
-    token_type: str = "bearer"
+    token_type: str
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
-
-def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
-
-def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
-    to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def register(req: RegisterRequest, db: Session = Depends(get_db)):
-    if db.query(User).filter((User.email == req.email) | (User.username == req.username)).first():
-        raise HTTPException(400, "Email or username already registered")
+    if db.query(User).filter(User.email == req.email).first():
+        raise HTTPException(status_code=400, detail="Email already registered")
     user = User(
         username=req.username,
         email=req.email,
