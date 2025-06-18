@@ -1,11 +1,27 @@
-import axios from 'axios';
+const BASE_URL = import.meta.env.VITE_API_URL || '';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://miseai-backend-production.up.railway.app';
-
-export function register({ username, email, password }) {
-  return axios.post(`${API_BASE}/auth/register`, { username, email, password });
+export async function register(username, email, password) {
+  const res = await fetch(`${BASE_URL}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, email, password }),
+  });
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.detail || 'Registration failed');
+  }
+  return res.json();
 }
 
-export function login({ email, password }) {
-  return axios.post(`${API_BASE}/auth/login`, { email, password });
+export async function login(email, password) {
+  const res = await fetch(`${BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.detail || 'Login failed');
+  }
+  return res.json();
 }
