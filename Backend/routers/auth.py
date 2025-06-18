@@ -1,29 +1,13 @@
-# routers/auth.py
-
-from datetime import datetime, timedelta
-from typing import Any, Dict
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
-from jose import jwt
-from passlib.context import CryptContext
 
-from database import get_db
-from models.user import User
+from backend.database import get_db
+from backend.models.user import User
+from backend.security import hash_password, verify_password, create_access_token
 
-# ——————————————
-# CONFIGURATION (move secrets into ENV in prod!)
-# ——————————————
-SECRET_KEY = "CHANGE_ME_TO_A_SECURE_RANDOM_KEY"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30  # adjust as you like
+router = APIRouter(tags=["Auth"])
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# ——————————————
-# Pydantic request/response models
-# ——————————————
 class RegisterRequest(BaseModel):
     username: str
     email: EmailStr
@@ -35,40 +19,19 @@ class LoginRequest(BaseModel):
 
 class TokenResponse(BaseModel):
     access_token: str
-    token_type: str
-
-# ——————————————
-# Helpers
-# ——————————————
-def hash_password(plain: str) -> str:
-    return pwd_context.hash(plain)
-
-def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
-
-def create_access_token(data: Dict[str, Any]) -> str:
-    to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
-# ——————————————
-# Router
-# ——————————————
-router = APIRouter(tags=["Auth"], prefix="/auth")
+    token_type: str = "bearer"
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def register(req: RegisterRequest, db: Session = Depends(get_db)):
-    # Prevent duplicate emails
     if db.query(User).filter(User.email == req.email).first():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered"
+            detail="Email already registered",
         )
     user = User(
         username=req.username,
         email=req.email,
-        hashed_password=hash_password(req.password)
+        hashed_password=hash_password(req.password),
     )
     db.add(user)
     db.commit()
