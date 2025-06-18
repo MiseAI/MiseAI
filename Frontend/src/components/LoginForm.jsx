@@ -1,43 +1,35 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { login } from '../api/auth';
 
 export default function LoginForm() {
-  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState();
+  const [message, setMessage] = useState('');
 
-  const onSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login({ email, password });
+      const res = await login({ email, password });
+      setMessage('Login successful');
+      console.log(res);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed');
+      setMessage(err.message || 'Login failed');
     }
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+    <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
       <div>
-        <label>Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-        />
+        <label>Email:</label><br/>
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
       </div>
       <div>
-        <label>Password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-        />
+        <label>Password:</label><br/>
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
       </div>
-      <button type="submit">Log In</button>
+      <button type="submit">Login</button>
+      {message && <p>{message}</p>}
     </form>
   );
 }

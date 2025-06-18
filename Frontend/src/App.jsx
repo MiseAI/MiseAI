@@ -1,36 +1,15 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import React, { useState } from 'react';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 
-function Dashboard() {
-  return <h1>🛡️ Protected Dashboard</h1>;
-}
-
-function PrivateRoute({ children }) {
-  const { token } = useAuth();
-  return token ? children : <Navigate to="/login" />;
-}
-
 export default function App() {
+  const [view, setView] = useState('login');
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/register" element={<RegisterForm />} />
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+    <div style={{ maxWidth: 400, margin: '2rem auto', padding: '1rem', border: '1px solid #ccc' }}>
+      {view === 'login' ? <LoginForm /> : <RegisterForm />}
+      <button onClick={() => setView(view === 'login' ? 'register' : 'login')}>
+        {view === 'login' ? 'Go to Register' : 'Go to Login'}
+      </button>
+    </div>
   );
 }
