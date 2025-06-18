@@ -1,22 +1,26 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from .schemas import RegisterRequest, LoginRequest, TokenResponse
-from ..database import get_db
-from ..models.user import User
-from ..core.security import hash_password, verify_password, create_access_token
+from models.user import User
+from database import SessionLocal
+from schemas import RegisterRequest, LoginRequest, TokenResponse
+from utils import hash_password, verify_password, create_access_token, get_db
 
 router = APIRouter()
 
 @router.post("/register", status_code=201)
 def register(req: RegisterRequest, db: Session = Depends(get_db)):
     if db.query(User).filter(User.email == req.email).first():
-        raise HTTPException(409, "Email already registered")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered"
+        )
     user = User(
         username=req.username,
         email=req.email,
         hashed_password=hash_password(req.password),
     )
-    db.add(user); db.commit(); db.refresh(user)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
     return {"message": f"User {user.email} registered successfully"}
 
 @router.post("/login", response_model=TokenResponse)
