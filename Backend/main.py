@@ -1,10 +1,10 @@
 from fastapi import FastAPI
-from routers import auth, users
+from backend.routers import auth, user
 
 app = FastAPI(title="MiseAI API")
 
 app.include_router(auth.router)
-app.include_router(users.router)
+app.include_router(user.router)
 
 @app.get("/")
 def read_root():

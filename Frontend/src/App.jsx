@@ -1,28 +1,20 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { UserProvider } from './UserContext';
+import PrivateRoute from './PrivateRoute';
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
-
-function App() {
-  const [user, setUser] = useState(null);
-  const token = localStorage.getItem("token");
-
-  useEffect(() => {
-    if (!token) return;
-    axios.get(`${API_BASE}/users/me`, { headers: { Authorization: `Bearer ${token}` } })
-      .then(res => setUser(res.data))
-      .catch(() => setUser(null));
-  }, [token]);
-
-  if (!token) return <div>Please log in first</div>;
-  if (!user) return <div>Loading profile…</div>;
-
+export default function App() {
   return (
-    <div>
-      <h1>Welcome, {user.username}!</h1>
-      <p>Your email is: {user.email}</p>
-    </div>
+    <UserProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/" element={<PrivateRoute><h1>Welcome!</h1></PrivateRoute>} />
+        </Routes>
+      </BrowserRouter>
+    </UserProvider>
   );
 }
-
-export default App;

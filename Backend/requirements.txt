@@ -4,4 +4,4 @@ pydantic==1.10.12
 sqlalchemy==1.4.49
 python-multipart
 passlib[bcrypt]
-PyJWT
+python-jose[cryptography]
