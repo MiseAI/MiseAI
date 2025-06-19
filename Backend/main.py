@@ -1,9 +1,5 @@
 from fastapi import FastAPI
-from backend.routers import auth, users
-from backend.database import Base, engine
-
-# Create all tables on startup
-Base.metadata.create_all(bind=engine)
+from routers import auth, users
 
 app = FastAPI(title="MiseAI API")
 
