@@ -53,4 +53,4 @@ def login(req: LoginRequest, db: Session = Depends(get_db)):
             headers={"WWW-Authenticate": "Bearer"},
         )
     token = create_access_token({"sub": user.email, "user_id": user.id})
-    return {"access_token": token, "token_type": "bearer"}
+    return TokenResponse(access_token=token)
