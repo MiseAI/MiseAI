@@ -29,6 +29,5 @@ def login(req: LoginRequest, db: Session = Depends(get_db)):
             detail="Invalid credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
     token = create_access_token({"sub": user.email, "user_id": user.id})
     return TokenResponse(access_token=token)
