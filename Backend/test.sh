@@ -18,9 +18,10 @@ echo "Login response → $LOGIN_RES"
 # 3) Extract the token
 TOKEN=$(jq -r .access_token <<<"$LOGIN_RES")
 if [[ -z "$TOKEN" || "$TOKEN" == "null" ]]; then
-  echo "❌ Failed to extract access_token. Check your /auth/login response above."
+  echo "❌ Failed to extract access_token. Check the /auth/login response above."
   exit 1
 fi
+
 echo "✅ Got JWT: $TOKEN"
 
 # 4) Call the protected endpoint
