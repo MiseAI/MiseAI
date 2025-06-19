@@ -1,4 +1,3 @@
-# routers/auth.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
@@ -29,7 +28,10 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 )
 def register(req: RegisterRequest, db: Session = Depends(get_db)):
     if db.query(User).filter(User.email == req.email).first():
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Email already registered")
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
     user = User(
         username=req.username,
         email=req.email,

@@ -1,10 +1,9 @@
-# main.py
 from fastapi import FastAPI
 from routers import auth, users
 
 app = FastAPI(title="MiseAI API")
 
-# ⚠️ Be explicit about the path prefix here
+# mount the routers with their prefixes
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(users.router, prefix="/users", tags=["Users"])
 
