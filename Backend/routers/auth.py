@@ -7,7 +7,6 @@ from database import get_db
 from models.user import User
 from security import hash_password, verify_password, create_access_token
 
-# --- schemas ---
 class RegisterRequest(BaseModel):
     username: str
     email: EmailStr
@@ -21,7 +20,6 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
 
-# --- router ---
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @router.post(
