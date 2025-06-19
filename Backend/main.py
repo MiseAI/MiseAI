@@ -4,8 +4,9 @@ from routers import auth, users
 
 app = FastAPI(title="MiseAI API")
 
-# mount your auth & users routers
+# mount the auth router at /auth
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
+# mount your users router at /users
 app.include_router(users.router, prefix="/users", tags=["Users"])
 
 @app.get("/", tags=["Default"])
