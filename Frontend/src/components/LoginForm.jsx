@@ -1,31 +1,23 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { login } from '../api';
-import { useAuth } from '../contexts/AuthContext';
+import { useState } from 'react'
+import { login } from '../api'
 
 export default function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { login: saveToken } = useAuth();
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const handleSubmit = async e => {
+    e.preventDefault()
     try {
-      const res = await login({ email, password });
-      saveToken(res.data.access_token);
-      navigate('/');
+      const res = await login({ email, password })
+      alert('Logged in: ' + JSON.stringify(res))
     } catch (err) {
-      alert(err.response?.data?.detail || 'Login failed');
+      alert('Error: ' + err)
     }
-  };
-
+  }
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-      <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+      <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
+      <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
       <button type="submit">Login</button>
     </form>
-  );
+  )
 }

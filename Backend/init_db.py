@@ -1,4 +1,5 @@
 from database import Base, engine
-import models.user
+from models.user import User
 
 Base.metadata.create_all(bind=engine)
+print("Tables created")
