@@ -1,32 +1,29 @@
-import React, { useState } from 'react';
-import { register } from '../api';
+import React, { useState } from 'react'
+import { register } from '../api'
 
 export default function RegisterForm() {
-  const [form, setForm] = useState({ username: '', email: '', password: '' });
-  const [msg, setMsg] = useState('');
-
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [message, setMessage] = useState('')
 
   const handleSubmit = async e => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      const res = await register(form);
-      setMsg(res.message);
-    } catch (err) {
-      setMsg(err.response?.data?.detail || 'Error');
+      const res = await register({ username, email, password })
+      setMessage(res.message)
+    } catch {
+      setMessage('Registration failed')
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Register</h2>
-      <input name="username" placeholder="Username" onChange={handleChange} />
-      <input name="email" placeholder="Email" onChange={handleChange} />
-      <input name="password" type="password" placeholder="Password" onChange={handleChange} />
+      <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" />
+      <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
+      <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
       <button type="submit">Register</button>
-      {msg && <p>{msg}</p>}
+      <div>{message}</div>
     </form>
-  );
+  )
 }

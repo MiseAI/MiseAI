@@ -1,31 +1,27 @@
-import React, { useState } from 'react';
-import { login } from '../api';
+import React, { useState } from 'react'
+import { login } from '../api'
 
 export default function LoginForm() {
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [msg, setMsg] = useState('');
-
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [message, setMessage] = useState('')
 
   const handleSubmit = async e => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      const res = await login(form);
-      setMsg('Logged in! Token: ' + res.access_token);
+      const res = await login({ email, password })
+      setMessage(`Logged in! Token: ${res.access_token}`)
     } catch (err) {
-      setMsg(err.response?.data?.detail || 'Error');
+      setMessage('Login failed')
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      <input name="email" placeholder="Email" onChange={handleChange} />
-      <input name="password" type="password" placeholder="Password" onChange={handleChange} />
+      <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
+      <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
       <button type="submit">Login</button>
-      {msg && <p>{msg}</p>}
+      <div>{message}</div>
     </form>
-  );
+  )
 }
