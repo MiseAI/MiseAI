@@ -18,7 +18,7 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
 
-router = APIRouter()
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def register(req: RegisterRequest, db: Session = Depends(get_db)):
