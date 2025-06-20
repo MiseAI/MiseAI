@@ -5,4 +5,4 @@ passlib[bcrypt]==1.7.4
 python-jose==3.5.0
 pydantic[email]==1.10.12
 python-multipart
-python-dotenv
+python-dotenv==1.0.0
