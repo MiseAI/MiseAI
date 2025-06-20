@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
-
 from database import get_db
 from models.user import User
 from security import hash_password, verify_password, create_access_token
@@ -19,7 +18,7 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
+router = APIRouter()
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def register(req: RegisterRequest, db: Session = Depends(get_db)):
