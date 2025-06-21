@@ -4,9 +4,8 @@ from pydantic import BaseModel, EmailStr
 
 from database import get_db
 from models.user import User
-from security import hash_password, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from security import hash_password, verify_password, create_access_token
 
-# Pydantic schemas
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
@@ -19,8 +18,8 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @router.post(
     "/login",
-    response_model=TokenResponse,                # ← ensure we declare the response model
-    summary="Login and receive a JWT access token"
+    response_model=TokenResponse,
+    summary="Login and receive a JWT access token",
 )
 def login(req: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == req.email).first()
@@ -31,5 +30,5 @@ def login(req: LoginRequest, db: Session = Depends(get_db)):
             headers={"WWW-Authenticate": "Bearer"},
         )
     token = create_access_token({"sub": user.email, "user_id": user.id})
-    # ← this is the critical part:
+    # **This must return exactly these two keys**  
     return {"access_token": token, "token_type": "bearer"}
