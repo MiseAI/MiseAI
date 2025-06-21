@@ -1,8 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App';
-import { API } from './api';
+import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
 
-// Rehydration for cookie-based auth isn't needed since cookies are sent automatically
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<App />} />
+      <Route path="/login" element={<LoginForm />} />
+      <Route path="/register" element={<RegisterForm />} />
+    </Routes>
+  </BrowserRouter>
+);
