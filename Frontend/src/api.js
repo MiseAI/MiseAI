@@ -1,25 +1,24 @@
+
 import axios from 'axios';
 
-export const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-  withCredentials: true, // include HttpOnly cookies
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
-// Example usage:
-// Login
-export async function login({ email, password }) {
-  const { data } = await API.post('/auth/login', { email, password });
-  return data;
-}
+export const register = (userData) => api.post('/auth/register', userData);
+export const login = (credentials) => api.post('/auth/login', credentials);
 
-// Logout
-export async function logout() {
-  const { data } = await API.post('/auth/logout');
-  return data;
-}
+export const setAuthToken = (token) => {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common['Authorization'];
+  }
+};
 
-// Fetch protected
-export async function getCurrentUser() {
-  const { data } = await API.get('/users/me');
-  return data;
-}
+export default api;
