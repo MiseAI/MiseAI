@@ -1,11 +1,11 @@
 {
   "name": "miseai-frontend",
   "version": "1.0.0",
-  "scripts": {
-    "dev": "npx vite",
-    "build": "npx vite build",
-    "serve": "npx serve dist"
-  },
+ "scripts": {
+  "dev": "node node_modules/vite/bin/vite.js",
+  "build": "node node_modules/vite/bin/vite.js build",
+  "serve": "npx serve dist"
+}
   "dependencies": {
     "axios": "^1.10.0",
     "react": "^18.2.0",
