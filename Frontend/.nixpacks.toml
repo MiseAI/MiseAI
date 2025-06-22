@@ -6,7 +6,10 @@ language = "node"
 nixPkgs = ["nodejs_18", "npm-9_x"]
 
 [phases.build]
-cmds = ["npm install", "npm run build"]
+cmds = [
+  "npm install",
+  "npm run build"
+]
 
 [phases.start]
 cmd = "npx serve dist -l $PORT"
