@@ -1,8 +1,17 @@
 from pydantic import BaseModel
+from typing import List
+
+class SaleData(BaseModel):
+    item: str
+    quantity: int
+    date: str
 
 class ForecastRequest(BaseModel):
-    days: int
-    category: str
+    sales_data: List[SaleData]
+
+class ForecastItem(BaseModel):
+    item: str
+    predicted_quantity: int
 
 class ForecastResponse(BaseModel):
-    predicted_sales: float
+    forecast: List[ForecastItem]
