@@ -1,5 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 
-ReactDOM.render(<h1>Hello MiseAI</h1>, document.getElementById('root'));
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <h1>MiseAI Frontend is working 🎉</h1>
+  </React.StrictMode>
+)
