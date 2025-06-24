@@ -1,6 +1,4 @@
 from fastapi import FastAPI
-from routes import menu
-
+from routes import recipes
 app = FastAPI()
-
-app.include_router(menu.router)
+app.include_router(recipes.router)
