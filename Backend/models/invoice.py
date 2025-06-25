@@ -1,14 +1,7 @@
-from pydantic import BaseModel
-from typing import List
-from datetime import date
+from sqlalchemy import Column, Integer
+from sqlalchemy.ext.declarative import declarative_base
+Base = declarative_base()
 
-class InvoiceItem(BaseModel):
-    name: str
-    quantity: float
-    unit_price: float
-    total_price: float
-
-class Invoice(BaseModel):
-    vendor: str
-    invoice_date: date
-    items: List[InvoiceItem]
+class InvoiceItem(Base):
+    __tablename__ = "invoice_items"
+    id = Column(Integer, primary_key=True)
