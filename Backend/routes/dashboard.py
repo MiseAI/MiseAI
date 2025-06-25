@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from models import SalesData, Recipe, InvoiceItem
-from database import get_sales, get_recipes, get_invoice_items
+from database.access import get_sales, get_recipes, get_invoice_items
 from collections import defaultdict
 
 router = APIRouter()
