@@ -1,9 +1,11 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
+from uuid import UUID
 
-class UserResponse(BaseModel):
-    id: int
-    username: str
-    email: EmailStr
+class ConversationCreate(BaseModel):
+    title: str = "New Chat"
 
-    class Config:
-        orm_mode = True
+class MessageCreate(BaseModel):
+    content: str
+
+class ChatResponse(BaseModel):
+    response: str
