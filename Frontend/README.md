@@ -1,3 +1,10 @@
 # MiseAI Frontend
 
-React + Vite-based frontend for MiseAI platform.
+Production-ready frontend for MiseAI.
+
+## Usage
+
+```bash
+npm install
+npm run dev
+```

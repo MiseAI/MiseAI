@@ -1,1 +1,0 @@
-// Routes are embedded in App.tsx for simplicity in this scaffold

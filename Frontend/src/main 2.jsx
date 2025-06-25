@@ -1,10 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './styles/index.css';
+import ReactDOM from 'react-dom';
+import './index.css';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+ReactDOM.render(<h1>Hello MiseAI</h1>, document.getElementById('root'));
