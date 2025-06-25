@@ -1,14 +1,15 @@
 from fastapi import APIRouter
+from models import SalesData, Recipe, InvoiceItem
+from database import get_sales, get_recipes, get_invoice_items
 from collections import defaultdict
-from .access import get_sales, get_recipes, get_invoice_items
 
 router = APIRouter()
 
 @router.get("/dashboard/summary")
 async def get_dashboard_summary():
-    sales = await get_sales()
-    recipes = await get_recipes()
-    invoices = await get_invoice_items()
+    sales = get_sales()
+    recipes = get_recipes()
+    invoices = get_invoice_items()
 
     recipe_costs = {r.name: r.cost for r in recipes}
 
@@ -22,7 +23,7 @@ async def get_dashboard_summary():
         total_sales = units_sold * price
         cost = recipe_costs.get(dish_name, 0) * units_sold
         profit = total_sales - cost
-        margin = round((profit / total_sales) * 100, 2) if total_sales else 0
+        margin = (profit / total_sales) * 100 if total_sales else 0
 
         category_revenue[item.category] += total_sales
 
@@ -32,7 +33,7 @@ async def get_dashboard_summary():
             "revenue": round(total_sales, 2),
             "cost": round(cost, 2),
             "profit": round(profit, 2),
-            "margin_pct": margin,
+            "margin_pct": round(margin, 2),
         })
 
     summary = sorted(summary, key=lambda x: x["profit"], reverse=True)
@@ -40,7 +41,7 @@ async def get_dashboard_summary():
     return {
         "top_items": summary[:5],
         "low_margin": sorted(summary, key=lambda x: x["margin_pct"])[:5],
-        "category_breakdown": dict(category_revenue),
-        "total_profit": round(sum(item["profit"] for item in summary), 2),
-        "total_revenue": round(sum(item["revenue"] for item in summary), 2)
+        "category_breakdown": category_revenue,
+        "total_profit": sum(item["profit"] for item in summary),
+        "total_revenue": sum(item["revenue"] for item in summary)
     }
