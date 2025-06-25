@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from collections import defaultdict
-from .access import get_sales, get_recipes, get_invoice_items  # Choose the correct source!
+from .access import get_sales, get_recipes, get_invoice_items
 
 router = APIRouter()
 
