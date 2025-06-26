@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from routes import dashboard
+from routes import auth
+from database import engine, Base
 
 app = FastAPI()
+Base.metadata.create_all(bind=engine)
 
-@app.get('/')
-def read_root():
-    return {"message": "Hello from Backend!"}
+app.include_router(auth.router)
