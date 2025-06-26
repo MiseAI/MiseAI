@@ -1,23 +1,10 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import Forecasting from "./pages/Forecasting";
-import Assistant from "./pages/Assistant";
+import React from 'react'
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <main>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/forecasting" element={<Forecasting />} />
-            <Route path="/assistant" element={<Assistant />} />
-          </Routes>
-        </Router>
-      </main>
+    <div className="p-8 text-center">
+      <h1 className="text-4xl font-bold text-blue-600">MiseAI Frontend Working 🎉</h1>
+      <p className="mt-4 text-lg text-gray-700">Your React + Tailwind + Vite stack is live.</p>
     </div>
-  );
+  )
 }
-
-export default App;
