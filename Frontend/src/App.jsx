@@ -1,23 +1,11 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import Forecasting from "./pages/Forecasting";
-import Assistant from "./pages/Assistant";
+import React from 'react';
+import Dashboard from './components/Dashboard';
 
-function App() {
-  return (
-    <div className="App">
-      <main>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/forecasting" element={<Forecasting />} />
-            <Route path="/assistant" element={<Assistant />} />
-          </Routes>
-        </Router>
-      </main>
-    </div>
-  );
-}
+const App = () => (
+  <div>
+    <h1>MiseAI Platform</h1>
+    <Dashboard />
+  </div>
+);
 
 export default App;
