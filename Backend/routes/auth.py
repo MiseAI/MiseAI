@@ -1,7 +1,1 @@
-from fastapi import APIRouter
-
-router = APIRouter()
-
-@router.post("/login")
-async def login():
-    return {"message": "stub auth"}
+# Placeholder for routes/auth.py

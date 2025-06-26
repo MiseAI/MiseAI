@@ -1,5 +1,17 @@
 from fastapi import FastAPI
-from routes.assistant import router as assistant_router
+from routes import auth, menu, recipe, invoice, forecast, ai_assistant, dashboard
 
 app = FastAPI()
-app.include_router(assistant_router, prefix="/api/ai-assistant")
+
+# Include your routes
+app.include_router(auth.router)
+app.include_router(menu.router)
+app.include_router(recipe.router)
+app.include_router(invoice.router)
+app.include_router(forecast.router)
+app.include_router(ai_assistant.router)
+app.include_router(dashboard.router)
+
+@app.get("/")
+def root():
+    return {"message": "MiseAI Backend is running"}
