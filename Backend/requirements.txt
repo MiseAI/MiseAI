@@ -9,3 +9,6 @@ pdfminer.six
 pytesseract
 openai
 python-dotenv
+
+Pillow
+tenacity

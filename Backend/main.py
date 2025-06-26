@@ -3,6 +3,10 @@ from routes import auth, menu, recipe, invoice, forecast, ai_assistant, dashboar
 
 app = FastAPI(title="MiseAI")
 
+
+@app.get("/healthcheck")
+async def healthcheck():
+    return {"status": "ok"}
 @app.get("/healthcheck")
 async def healthcheck():
     return {"status": "ok"}
