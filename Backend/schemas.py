@@ -1,9 +1,13 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
+from datetime import datetime
+from typing import Optional
 
-class UserResponse(BaseModel):
+class ChatHistoryOut(BaseModel):
     id: int
-    username: str
-    email: EmailStr
+    prompt: str
+    response: str
+    created_at: datetime
+    tags: Optional[str]
 
     class Config:
         orm_mode = True
