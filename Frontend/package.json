@@ -5,7 +5,8 @@
     "postinstall": "chmod +x node_modules/.bin/vite",
     "build": "npm run postinstall && vite build",
     "dev": "vite",
-    "serve": "serve dist"
+    "serve": "serve dist",
+    "start": "vite preview --port 3000"
   },
   "dependencies": {
     "axios": "^1.10.0",
