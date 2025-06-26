@@ -1,11 +1,7 @@
 fastapi
-uvicorn[standard]
-python-multipart
-pydantic
-sqlalchemy
-psycopg2-binary
+uvicorn
+email-validator
 pandas
-pdfminer.six
-pytesseract
-openai
+sqlalchemy>=1.4
+openai>=1.0.0
 python-dotenv

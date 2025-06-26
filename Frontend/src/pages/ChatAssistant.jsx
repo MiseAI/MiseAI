@@ -4,12 +4,10 @@ import api from '../api';
 export default function ChatAssistant() {
   const [message, setMessage] = useState('');
   const [reply, setReply] = useState('');
-
   const sendChat = async () => {
     const { data } = await api.post('/ai/chat', { messages: [{ role: 'user', content: message }] });
     setReply(data.reply);
   };
-
   return (
     <div>
       <h1 className="text-2xl mb-4">AI Chat Assistant</h1>

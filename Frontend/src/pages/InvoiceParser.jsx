@@ -4,7 +4,6 @@ import api from '../api';
 export default function InvoiceParser() {
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
-
   const handleUpload = async () => {
     const form = new FormData();
     form.append('file', file);
@@ -13,7 +12,6 @@ export default function InvoiceParser() {
     });
     setResult(data);
   };
-
   return (
     <div>
       <h1 className="text-2xl mb-4">Invoice Parser</h1>

@@ -3,11 +3,7 @@ import api from '../api';
 
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
-
-  useEffect(() => {
-    api.get('/dashboard').then(res => setStats(res.data));
-  }, []);
-
+  useEffect(() => { api.get('/dashboard').then(res => setStats(res.data)); }, []);
   return (
     <div>
       <h1 className="text-2xl mb-4">Profitability Dashboard</h1>

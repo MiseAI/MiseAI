@@ -5,13 +5,11 @@ export default function RecipeCost() {
   const [name, setName] = useState('');
   const [ingredients, setIngredients] = useState('{}');
   const [result, setResult] = useState(null);
-
   const handleSubmit = async () => {
     const payload = { name, ingredients: JSON.parse(ingredients) };
     const { data } = await api.post('/recipe/cost', payload);
     setResult(data);
   };
-
   return (
     <div>
       <h1 className="text-2xl mb-4">Recipe Costing Assistant</h1>
