@@ -10,18 +10,3 @@ app.include_router(invoice.router)
 app.include_router(forecast.router)
 app.include_router(ai_assistant.router)
 app.include_router(dashboard.router)
-
-from fastapi.middleware.cors import CORSMiddleware
-
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Adjust for prod
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.get("/health")
-def healthcheck():
-    return {"status": "ok"}
