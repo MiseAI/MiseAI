@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from models.chat import Conversation, Message
-from database import get_db
+from database.session import get_db
 from schemas import MessageCreate, ChatResponse, ConversationCreate
 from sqlalchemy.orm import Session
 from services.ai_utils import get_ai_response
