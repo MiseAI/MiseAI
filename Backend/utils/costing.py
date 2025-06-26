@@ -1,1 +1,0 @@
-# Costing and pricing logic functions

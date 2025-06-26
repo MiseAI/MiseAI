@@ -1,7 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, UploadFile, File
+import pandas as pd
 
 router = APIRouter()
 
-@router.get("/menu")
-def get_menu():
-    return {"message": "menu works!"}
+@router.post("/analyze")
+async def analyze_menu(file: UploadFile = File(...)):
+    df = pd.read_excel(await file.read())
+    return {"topItems": [], "lowPerformers": []}

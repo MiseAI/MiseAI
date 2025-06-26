@@ -2,6 +2,6 @@ from fastapi import APIRouter
 
 router = APIRouter()
 
-@router.get("/")
-async def dashboard():
+@router.get("/next-week")
+async def forecast_next_week():
     return {}
