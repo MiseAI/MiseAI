@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from models.chat import Conversation, Message
+from models.chat import Conversation
 
 router = APIRouter()
 

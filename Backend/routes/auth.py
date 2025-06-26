@@ -4,4 +4,4 @@ router = APIRouter()
 
 @router.post("/login")
 async def login():
-    return {"message": "stub: implement auth"}
+    return {"message": "stub auth"}
