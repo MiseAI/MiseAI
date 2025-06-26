@@ -1,33 +1,29 @@
-import os
+# OpenAI streaming + retry + memory + multi-prompt
 import openai
-from fastapi import HTTPException
-from tenacity import retry, stop_after_attempt, wait_fixed
+import asyncio
+from utils.memory import get_context_messages
+from utils.prompts import get_prompt_template
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+async def stream_ai_response(messages, user_id, org_id, intent):
+    history = get_context_messages(user_id, org_id)
+    prompt = get_prompt_template(intent)
+    full_context = [{"role": "system", "content": prompt}] + history + messages
 
-SYSTEM_PROMPT = (
-    "You are MiseAI, an AI assistant specialized in restaurant operations. "
-    "Provide concise and actionable insights based on user requests."
-)
-
-@retry(stop=stop_after_attempt(3), wait=wait_fixed(1))
-def call_openai(messages):
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-4o-mini",
-            messages=messages,
-            temperature=0.7
+            model="gpt-4",
+            messages=full_context,
+            stream=True
         )
-        return response
-    except Exception as e:
-        print(f"OpenAI API error: {e}")
-        raise
+        for chunk in response:
+            if "choices" in chunk and chunk["choices"][0]["delta"].get("content"):
+                yield f"data: {chunk['choices'][0]['delta']['content']}
 
-def get_chat_response(user_messages):
-    msgs = [{"role": "system", "content": SYSTEM_PROMPT}]
-    msgs.extend([{"role": m.role, "content": m.content} for m in user_messages])
-    try:
-        res = call_openai(msgs)
-        return res.choices[0].message.content
-    except Exception:
-        raise HTTPException(status_code=502, detail="AI service unavailable")
+"
+        yield "data: [DONE]
+
+"
+    except Exception as e:
+        yield f"data: Error: {str(e)}
+
+"
