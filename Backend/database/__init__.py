@@ -1,1 +1,1 @@
-# database package init
+# Init file for database module
