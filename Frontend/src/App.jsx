@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ChatPage from "./pages/ChatPage";
+import ChatPage from "./pages/ChatPage.jsx";
 
 function App() {
   return (
