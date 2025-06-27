@@ -1,26 +1,19 @@
+import React from 'react';
+import ChatMessage from './ChatMessage';
+import SearchBar from './SearchBar';
+import { useChatHistory } from '../hooks/useChatHistory';
 
-import React, { useEffect, useState } from 'react';
-import { getAllSavedChats } from '../utils/chatHistory';
+export default function ChatHistory({ chats }) {
+  const { query, setQuery, filteredChats } = useChatHistory(chats);
 
-const ChatHistory = ({ onSelect }) => {
-    const [chats, setChats] = useState([]);
-
-    useEffect(() => {
-        setChats(getAllSavedChats());
-    }, []);
-
-    return (
-        <div>
-            <h2>Previous Chats</h2>
-            <ul>
-                {chats.map((chat, index) => (
-                    <li key={index} onClick={() => onSelect(chat)}>
-                        Chat ID: {chat.id}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-};
-
-export default ChatHistory;
+  return (
+    <div className="w-full">
+      <SearchBar query={query} setQuery={setQuery} />
+      <div className="space-y-2 max-h-[500px] overflow-y-auto">
+        {filteredChats.map((chat, idx) => (
+          <ChatMessage key={idx} {...chat} />
+        ))}
+      </div>
+    </div>
+  );
+}
