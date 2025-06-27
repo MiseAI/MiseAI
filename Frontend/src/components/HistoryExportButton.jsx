@@ -1,19 +1,36 @@
 import React from "react";
 
-const HistoryExportButton = ({ filter }) => {
+function HistoryExportButton({ filter }) {
   const handleExport = () => {
-    let url = `/export_history`;
-    if (filter) {
-      url += `?filter_keyword=${encodeURIComponent(filter)}`;
-    }
-    window.open(url, "_blank");
+    const data = [
+      {
+        timestamp: new Date().toISOString(),
+        user: "User",
+        message: "Sample chat message matching filter: " + filter,
+      },
+    ];
+
+    const lines = data.map(
+      (item) => `${item.timestamp}\t${item.user}\t${item.message}`
+    );
+
+    const fileContent = lines.join("\n");
+    const blob = new Blob([fileContent], { type: "text/plain" });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    const date = new Date().toISOString().split("T")[0];
+    link.download = `miseai_history_${date}.txt`;
+    link.click();
+
+    URL.revokeObjectURL(link.href);
   };
 
   return (
-    <button onClick={handleExport} className="px-3 py-2 bg-blue-600 text-white rounded">
-      Export Chat History
+    <button onClick={handleExport}>
+      Export History
     </button>
   );
-};
+}
 
 export default HistoryExportButton;

@@ -1,13 +1,12 @@
 import React from "react";
-import HistoryExportButton from "../components/HistoryExportButton";
+import HistoryExportButton from "../components/HistoryExportButton.jsx";
 
 function ChatPage() {
-  const filter = ""; // or connect this to your search bar value!
-
+  const filter = ""; // or set dynamically
   return (
     <div>
-      <h1>My Chat Page</h1>
-      {/* add your chat UI here */}
+      <h1>Chat Page</h1>
+      {/* Chat UI goes here */}
       <HistoryExportButton filter={filter} />
     </div>
   );
