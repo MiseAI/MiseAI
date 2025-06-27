@@ -1,0 +1,14 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ChatPage from "./pages/ChatPage.jsx";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/chat" element={<ChatPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;

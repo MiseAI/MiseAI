@@ -1,0 +1,7 @@
+date,vendor,item_name,price
+2025-06-01,VendorA,Butter,2.50
+2025-06-08,VendorA,Butter,2.70
+2025-06-15,VendorB,Butter,2.40
+2025-06-22,VendorB,Butter,2.60
+2025-06-01,VendorA,Tomatoes,1.10
+2025-06-15,VendorC,Tomatoes,1.00
