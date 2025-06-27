@@ -1,12 +1,11 @@
-import React from "react";
-import HistoryExportButton from "../components/HistoryExportButton.jsx";
+import HistoryExportButton from "../components/HistoryExportButton";
 
 function ChatPage() {
-  const filter = ""; // or set dynamically
+  const filter = ""; // eventually connected to a search bar
   return (
     <div>
-      <h1>Chat Page</h1>
-      {/* Chat UI goes here */}
+      <h1>MiseAI Chat Page</h1>
+      {/* Chat UI would go here */}
       <HistoryExportButton filter={filter} />
     </div>
   );
