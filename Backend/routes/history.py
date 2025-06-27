@@ -1,32 +1,30 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
+from typing import Optional, List
 from datetime import datetime
-from typing import List, Optional
-from database import get_db
-from models import ChatHistory
-from auth import get_current_user
-from schemas import ChatHistoryOut
 
-router = APIRouter(prefix="/api/history", tags=["Chat History"])
+from database.session import get_db
+from models.chat import ChatMessage
+from schemas.chat import ChatMessageSchema
 
-@router.get("/", response_model=List[ChatHistoryOut])
-def get_user_history(
-    q: Optional[str] = None,
+router = APIRouter()
+
+@router.get("/chat/history", response_model=List[ChatMessageSchema])
+def get_chat_history(
+    user_id: int,
+    query: Optional[str] = None,
     from_date: Optional[datetime] = None,
     to_date: Optional[datetime] = None,
-    tag: Optional[str] = None,
-    db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
-    query = db.query(ChatHistory).filter(ChatHistory.user_id == current_user["id"])
+    q = db.query(ChatMessage).filter(ChatMessage.user_id == user_id)
 
-    if q:
-        query = query.filter(ChatHistory.prompt.ilike(f"%{q}%") | ChatHistory.response.ilike(f"%{q}%"))
+    if query:
+        q = q.filter(ChatMessage.message.ilike(f"%{query}%"))
+
     if from_date:
-        query = query.filter(ChatHistory.created_at >= from_date)
+        q = q.filter(ChatMessage.timestamp >= from_date)
     if to_date:
-        query = query.filter(ChatHistory.created_at <= to_date)
-    if tag:
-        query = query.filter(ChatHistory.tags.ilike(f"%{tag}%"))
+        q = q.filter(ChatMessage.timestamp <= to_date)
 
-    return query.order_by(ChatHistory.created_at.desc()).all()
+    return q.order_by(ChatMessage.timestamp.desc()).all()
