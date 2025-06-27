@@ -1,11 +1,16 @@
-import React from 'react'
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ChatPage from "./pages/ChatPage";
 
 function App() {
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold text-center text-blue-500">Welcome to MiseAI</h1>
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/chat" element={<ChatPage />} />
+        {/* other routes */}
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
