@@ -1,7 +1,0 @@
-fastapi
-uvicorn
-email-validator
-pandas
-sqlalchemy>=1.4
-passlib[bcrypt]
-python-jose
