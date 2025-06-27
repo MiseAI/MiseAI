@@ -1,40 +1,41 @@
 import React from "react";
 
-function HistoryExportButton({ filter }) {
-  const handleExport = () => {
-    const mockHistory = [
-      { id: 1, user: "Hello AI", ai: "Hello Chef!" },
-      { id: 2, user: "Cost out recipe?", ai: "Sure, send me ingredients." }
-    ];
+const HistoryExportButton = ({ filter }) => {
+  const handleExport = async () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
 
-    const filtered = filter
-      ? mockHistory.filter(
-          (item) =>
-            item.user.includes(filter) || item.ai.includes(filter)
-        )
-      : mockHistory;
+    try {
+      const response = await fetch(`${apiUrl}/chat/export?filter=${encodeURIComponent(filter)}`);
+      if (!response.ok) {
+        throw new Error("Failed to export history.");
+      }
 
-    const rows = filtered.map(
-      (entry) => `${entry.id}\t${entry.user}\t${entry.ai}`
-    );
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
 
-    const fileContent = rows.join("\n");
+      const dateStr = new Date().toISOString().split("T")[0];
+      link.download = `miseai_history_${dateStr}.txt`;
 
-    const blob = new Blob([fileContent], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `miseai_history_${new Date().toISOString().split("T")[0]}.txt`;
-    link.click();
-    URL.revokeObjectURL(url);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+      alert("Export failed.");
+    }
   };
 
   return (
-    <button onClick={handleExport}>
+    <button
+      onClick={handleExport}
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    >
       Export Chat History
     </button>
   );
-}
+};
 
 export default HistoryExportButton;

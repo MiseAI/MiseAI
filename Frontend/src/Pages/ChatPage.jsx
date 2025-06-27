@@ -1,19 +1,13 @@
-// src/pages/ChatPage.jsx
 import React from "react";
 import HistoryExportButton from "../components/HistoryExportButton";
 
 const ChatPage = () => {
-  // If you’re implementing a search bar, you could wire it here.
-  // For now, we’ll leave filter as an empty string or some test value.
-  const filter = "";
+  const filter = ""; // you can link this to a search bar later
 
   return (
-    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
-      <h1>Chat Page</h1>
-      <p>This is your chat page content.</p>
-      {/* Add your chat messages UI here */}
-
-      {/* Export button */}
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Mise AI Chat</h1>
+      {/* Chat UI here */}
       <HistoryExportButton filter={filter} />
     </div>
   );
