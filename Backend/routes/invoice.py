@@ -7,7 +7,7 @@ from schemas.invoice import InvoiceOut
 from database import get_db
 from core.security import get_current_user
 
-router = APIRouter(prefix="/invoice", tags=["Invoices"])
+router = APIRouter(tags=["Invoices"])
 
 UPLOAD_DIR = "uploaded_invoices"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -30,9 +30,8 @@ async def upload_invoice(
     )
     db.add(invoice)
     db.commit()
-    db.refresh(invoice)
 
-    return {"message": "File uploaded successfully", "invoice_id": invoice.id}
+    return {"message": f"File '{file.filename}' uploaded successfully."}
 
 
 @router.get("/list", response_model=list[InvoiceOut])
