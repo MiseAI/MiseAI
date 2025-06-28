@@ -1,32 +1,33 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-from database import SessionLocal
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
+from database import get_db
 from models.user import User
-from schemas.auth import UserCreate, UserLogin, Token
 from core.security import hash_password, verify_password, create_access_token
+from pydantic import BaseModel
 
-router = APIRouter()
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
-async def get_db():
-    async with SessionLocal() as session:
-        yield session
+class SignupRequest(BaseModel):
+    email: str
+    password: str
 
-@router.post("/register")
-async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
-    # Check if user exists
-    result = await db.execute(
-        User.__table__.select().where(User.email == user_data.email)
-    )
-    existing_user = result.scalar_one_or_none()
-
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered.")
-
-    new_user = User(
-        email=user_data.email,
-        hashed_password=hash_password(user_data.password),
-    )
+@router.post("/signup")
+def signup(request: SignupRequest, db: Session = Depends(get_db)):
+    if db.query(User).filter(User.email == request.email).first():
+        raise HTTPException(status_code=400, detail="Email already registered")
+    new_user = User(email=request.email, hashed_password=hash_password(request.password))
     db.add(new_user)
-    await db.commit()
+    db.commit()
+    return {"msg": "Signup successful"}
 
-    return {"message": "User registered successfully."}
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+@router.post("/login")
+def login(request: LoginRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == request.email).first()
+    if not user or not verify_password(request.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    token = create_access_token(data={"sub": user.email})
+    return {"access_token": token, "token_type": "bearer"}
