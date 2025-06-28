@@ -1,19 +1,21 @@
-// frontend/src/main.jsx
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import App from './App.jsx';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from 'react-router-dom';
+
 import ChatPage from './pages/ChatPage.jsx';
-import './index.css';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <ChatPage />,
+  },
+]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/chat" element={<ChatPage />} />
-      </Routes>
-    </BrowserRouter>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
