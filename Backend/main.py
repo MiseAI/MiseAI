@@ -10,7 +10,7 @@ app = FastAPI()
 
 origins = [
     "https://frontend-production-f46d.up.railway.app",
-    "http://localhost:3000",  # helpful for local dev
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
@@ -23,8 +23,8 @@ app.add_middleware(
 
 Base.metadata.create_all(bind=engine)
 
-app.include_router(auth.router)
 app.include_router(auth.router, prefix="/api/auth")
+app.include_router(history.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
 
 if __name__ == "__main__":
