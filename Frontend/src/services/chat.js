@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export async function sendChatMessage(message, token) {
+export async function sendMessage(message, token) {
   const res = await axios.post(
-    `${API_URL}/api/chat`,
+    `${API_BASE_URL}/api/chat`,
     { message },
     {
       headers: {
