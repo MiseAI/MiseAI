@@ -5,7 +5,7 @@ from models.user import User
 from core.security import hash_password, verify_password, create_access_token
 from pydantic import BaseModel
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
+router = APIRouter(tags=["Auth"])
 
 class SignupRequest(BaseModel):
     email: str
