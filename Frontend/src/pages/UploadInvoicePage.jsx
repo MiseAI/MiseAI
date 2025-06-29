@@ -118,7 +118,12 @@ const UploadInvoicePage = () => {
             key={invoice.id}
             className="flex justify-between items-center border p-2 rounded"
           >
-            <span>{invoice.filename}</span>
+            <div>
+              <div>{invoice.filename}</div>
+              <div className="text-gray-600 text-sm">
+                Uploaded at: {new Date(invoice.uploaded_at).toLocaleString()}
+              </div>
+            </div>
             <button
               onClick={() => downloadInvoice(invoice.id, invoice.filename)}
               className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
