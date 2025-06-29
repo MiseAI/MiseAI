@@ -11,7 +11,6 @@ app = FastAPI()
 
 origins = [
     "https://frontend-production-f46d.up.railway.app",
-    "http://localhost:3000",
     "http://localhost:5173",
 ]
 

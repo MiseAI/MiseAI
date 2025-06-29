@@ -6,27 +6,51 @@ export default function UploadInvoicePage() {
   const [invoices, setInvoices] = useState([]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const token = localStorage.getItem("access_token");
+  // We won’t read token at the top anymore
 
   const handleUpload = async () => {
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+      setError("You must be logged in to upload invoices.");
+      return;
+    }
+
     if (!file) {
       setError("Please choose a file.");
       return;
     }
+
     try {
+      setLoading(true);
       setError("");
       setMessage("Uploading...");
       const res = await uploadInvoice(file, token);
-      setMessage(res.message);
+      setMessage(res.message || "Upload successful!");
+      setFile(null);
       fetchInvoices();
     } catch (err) {
       console.error(err);
-      setError(err?.response?.data?.detail || "Upload failed.");
+      setError(
+        err?.response?.data?.detail ||
+        err?.message ||
+        "Upload failed."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchInvoices = async () => {
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+      console.log("No token, skipping fetchInvoices.");
+      return;
+    }
+
     try {
       const data = await listInvoices(token);
       setInvoices(data);
@@ -37,24 +61,28 @@ export default function UploadInvoicePage() {
   };
 
   useEffect(() => {
-    if (token) {
-      fetchInvoices();
-    }
-  }, [token]);
+    fetchInvoices();
+  }, []);
 
   return (
     <div className="p-8 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Upload Invoice</h1>
+
       <input
         type="file"
         onChange={(e) => setFile(e.target.files[0])}
-        className="mb-4"
+        className="mb-4 block"
       />
       <button
         onClick={handleUpload}
-        className="bg-green-600 text-white px-4 py-2 rounded"
+        disabled={loading || !file}
+        className={`px-4 py-2 rounded ${
+          loading
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-green-600 hover:bg-green-700 text-white"
+        }`}
       >
-        Upload
+        {loading ? "Uploading..." : "Upload"}
       </button>
 
       {message && (
