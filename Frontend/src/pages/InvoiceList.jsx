@@ -77,3 +77,4 @@ const InvoiceList = () => {
 };
 
 export default InvoiceList;
+import InvoiceList from "./InvoiceList";
